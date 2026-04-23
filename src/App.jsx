@@ -76,8 +76,20 @@ export default function App() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ script })
             });
+
+            if (!res.ok) {
+                let msg = 'Generation failed.';
+                const text = await res.text();
+                try {
+                    const json = JSON.parse(text);
+                    if (json.error) msg = json.error;
+                } catch (_) {
+                    msg = `Server Error ${res.status}: Route unavailable or returned HTML (check Vercel logs).`;
+                }
+                throw new Error(msg);
+            }
+
             const data = await res.json();
-            if (!res.ok) throw new Error(data.error || 'Generation failed.');
             if (!Array.isArray(data) || data.length === 0) throw new Error('No beats returned. Please retry.');
             setBeats(data);
         } catch (err) {
