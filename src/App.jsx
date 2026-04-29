@@ -20,6 +20,9 @@ function BeatCard({ beat }) {
         <div className="beat-card">
             <div className="beat-header">
                 <span className="beat-number">Beat {beat.beat}</span>
+                {beat.sentenceNumber != null && (
+                    <span style={{ fontSize: '11px', color: '#555', marginLeft: '8px' }}>Sentence {beat.sentenceNumber}</span>
+                )}
             </div>
 
             <div className="beat-script">
@@ -102,7 +105,7 @@ export default function App() {
     const copyAll = () => {
         if (!beats) return;
         const text = beats.map(b => {
-            let out = `Beat ${b.beat}\nScript: ${b.scriptLine}\nImage Prompt: ${b.imagePrompt}`;
+            let out = `Beat ${b.beat}${b.sentenceNumber != null ? ` (S${b.sentenceNumber})` : ''}\nScript: ${b.scriptLine}\nImage Prompt: ${b.imagePrompt}`;
             if (b.videoAnimationPrompt) out += `\nAnimation Prompt: ${b.videoAnimationPrompt}`;
             return out;
         }).join('\n\n---\n\n');
